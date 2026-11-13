@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive INF2001 music school workload management prototype">
+  <meta name="theme-color" content="#12243a">
+  <title>Cadence Music School Management</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <div id="login-view" class="login-layout">
+    <section class="login-brand" aria-labelledby="login-title">
+      <div class="brand-lockup brand-lockup--light">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span>Cadence</span>
+      </div>
+      <div class="login-copy">
+        <p class="eyebrow">Music School Management System</p>
+        <h1 id="login-title">One clear rhythm for every lesson.</h1>
+        <p>Plan teacher workloads, protect availability, allocate studios, and keep every change traceable.</p>
+      </div>
+      <div class="login-proof">
+        <div><strong>5</strong><span>aligned components</span></div>
+        <div><strong>15</strong><span>covered use cases</span></div>
+        <div><strong>360px+</strong><span>responsive design</span></div>
+      </div>
+    </section>
+
+    <main class="login-panel">
+      <div class="login-panel__inner">
+        <span class="demo-pill">Interactive prototype</span>
+        <h2>Choose a demo account</h2>
+        <p class="muted">No real credentials are used. Select a fictional account to explore its role-specific portal.</p>
+
+        <div class="account-groups" id="demo-accounts" aria-live="polite"></div>
+
+        <div class="login-actions">
+          <button class="button button--primary button--wide" id="sign-in-button" disabled>Enter selected portal</button>
+          <button class="text-button" id="forgot-password-button">Simulate password reset</button>
+        </div>
+        <p class="prototype-note"><span aria-hidden="true">●</span> Authentication and email delivery are simulated. Application state stays in this browser only.</p>
+      </div>
+    </main>
+  </div>
+
+  <div id="app-view" class="app-shell" hidden>
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-lockup brand-lockup--light sidebar__brand">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span>Cadence</span>
+      </div>
+      <div class="sidebar__role" id="sidebar-role"></div>
+      <nav id="primary-nav" class="primary-nav" aria-label="Primary navigation"></nav>
+      <div class="sidebar__footer">
+        <button class="sidebar-link" id="reset-demo-button"><span class="nav-symbol">↺</span><span>Reset demo data</span></button>
+        <button class="sidebar-link" id="sign-out-button"><span class="nav-symbol">↗</span><span>Switch account</span></button>
+      </div>
+    </aside>
+
+    <div class="app-stage">
+      <header class="topbar">
+        <button class="icon-button menu-button" id="menu-button" aria-label="Open navigation" aria-expanded="false">☰</button>
+        <div class="breadcrumbs" id="breadcrumbs"></div>
+        <div class="topbar__actions">
+          <button class="icon-button notification-button" id="notification-button" aria-label="Open notifications">
+            <span aria-hidden="true">◌</span><span class="notification-dot" id="notification-dot"></span>
+          </button>
+          <button class="profile-button" id="profile-button" aria-label="Open profile menu">
+            <span class="avatar" id="profile-avatar"></span>
+            <span class="profile-meta"><strong id="profile-name"></strong><small id="profile-role"></small></span>
+            <span aria-hidden="true">⌄</span>
+          </button>
+        </div>
+      </header>
+
+      <main id="main-content" class="page" tabindex="-1"></main>
+    </div>
+
+    <aside class="notification-drawer" id="notification-drawer" aria-label="Notifications" aria-hidden="true">
+      <div class="drawer-header">
+        <div><p class="eyebrow">Notification service</p><h2>Notifications</h2></div>
+        <button class="icon-button" id="close-notifications" aria-label="Close notifications">×</button>
+      </div>
+      <div class="drawer-body" id="notification-list"></div>
+    </aside>
+    <div class="drawer-scrim" id="drawer-scrim" hidden></div>
+  </div>
+
+  <div class="modal-backdrop" id="modal-backdrop" hidden>
+    <section class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <div><p class="eyebrow" id="modal-eyebrow">Prototype action</p><h2 id="modal-title">Dialog</h2></div>
+        <button class="icon-button" id="modal-close" aria-label="Close dialog">×</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-footer" id="modal-footer"></div>
+    </section>
+  </div>
+
+  <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
