@@ -14,17 +14,20 @@ let managerFilters = { instrument: 'All', shift: 'All', availability: 'All' };
 let dashboardRange = 'Week';
 
 function buildAvailabilityDraft() {
-  const seeded = {
-    '2026-12-01': ['09:00', '17:00'],
-    '2026-12-02': ['10:00', '18:00'],
-    '2026-12-03': ['09:00', '13:00'],
-    '2026-12-04': ['12:00', '20:00'],
-    '2026-12-05': ['09:00', '14:00']
-  };
+  const teacher = teacherFor(state, state.currentUserId);
+
   return Array.from({ length: 31 }, (_, index) => {
     const date = `2026-12-${String(index + 1).padStart(2, '0')}`;
-    const [start = '', end = ''] = seeded[date] || [];
-    return { date, start, end };
+
+    const slot = teacher?.availability.find(
+      item => item.date === date
+    );
+
+    return {
+      date,
+      start: slot?.start || '',
+      end: slot?.end || ''
+    };
   });
 }
 
@@ -108,6 +111,8 @@ function enterApp() {
     account.failedLogins = 0;
   }
   state.currentUserId = selectedLoginId;
+  availabilityDraft = buildAvailabilityDraft();
+  availabilityMode = 'regular';
   saveState(state);
   el('login-view').hidden = true;
   el('app-view').hidden = false;
@@ -592,7 +597,39 @@ function decideRequest(id,decision) {
   let clashes=[];
   if(decision==='Approved'){
     if(changeType==='Unavailable'){
-      teacher.availability=teacher.availability.filter(slot=>slot.date!==request.date||!rangesOverlap(request.start,request.end,slot.start,timeToMinutes(slot.end)-timeToMinutes(slot.start)));
+      teacher.availability = teacher.availability.flatMap(slot => {
+  if (
+    slot.date !== request.date ||
+    !rangesOverlap(
+      request.start,
+      request.end,
+      slot.start,
+      timeToMinutes(slot.end) - timeToMinutes(slot.start)
+    )
+  ) {
+    return [slot];
+  }
+
+  const remaining = [];
+
+  if (timeToMinutes(slot.start) < timeToMinutes(request.start)) {
+    remaining.push({
+      date: slot.date,
+      start: slot.start,
+      end: request.start
+    });
+  }
+
+  if (timeToMinutes(slot.end) > timeToMinutes(request.end)) {
+    remaining.push({
+      date: slot.date,
+      start: request.end,
+      end: slot.end
+    });
+  }
+
+  return remaining;
+});
       clashes=state.lessons.filter(lesson=>lesson.teacherId===request.teacherId&&lesson.status==='Assigned'&&lesson.date===request.date&&rangesOverlap(request.start,request.end,lesson.start,lesson.duration));
       clashes.forEach(lesson=>{lesson.status='Needs reassignment';adjustTeacherHours(request.teacherId,-lesson.duration/60);lesson.teacherId=null;});
       if(clashes.length)addNotification(state,'m1','Availability clashes need reassignment',`${clashes.map(lesson=>lesson.id).join(', ')} were released after approving ${request.id}.`);
@@ -668,7 +705,10 @@ el('reset-demo-button').addEventListener('click', () => showModal('Reset demonst
 el('sign-out-button').addEventListener('click', () => { state.currentUserId=null;saveState(state);selectedLoginId=null;el('app-view').hidden=true;el('login-view').hidden=false;renderLogin(); });
 el('profile-button').addEventListener('click', () => showModal(currentUser().name,`<div class="notice notice--info"><span class="avatar">${initials(currentUser().name)}</span><div><strong>${safe(currentUser().role)}</strong>${safe(currentUser().email)}${currentUser().instrument?` · ${safe(currentUser().instrument)}`:''}</div></div><p class="muted" style="margin-top:14px">This is fictional demonstration data. Use Switch account to move between portals while preserving shared state.</p>`));
 document.addEventListener('click', event => {
-  if(event.target.id==='confirm-reset'){const userId=state.currentUserId;state=resetState();state.currentUserId=userId;saveState(state);closeModal();currentPage=currentUser().role==='IT Administrator'?'accounts':'dashboard';renderShell();toast('Demo reset','All scenarios returned to their original state.');}
+  if(event.target.id==='confirm-reset'){const userId=state.currentUserId;state=resetState();state.currentUserId=userId;
+availabilityDraft=buildAvailabilityDraft();
+availabilityMode='regular';
+saveState(state);closeModal();currentPage=currentUser().role==='IT Administrator'?'accounts':'dashboard';renderShell();toast('Demo reset','All scenarios returned to their original state.');}
   if(event.target.id==='simulate-reset'){const target=accountFor(state,'t1');addNotification(state,target.id,'Password reset requested','A simulated reset link is valid for 30 minutes.','Simulated email');addAudit(state,'a1','Password reset requested',target.id,'No active token','Token valid for 30 minutes');saveState(state);closeModal();toast('Reset state generated','No real email was sent.');}
 });
 
