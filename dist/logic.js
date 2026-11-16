@@ -11,7 +11,7 @@ export function createInitialState() {
       { id: 't1', name: 'Amelia Tan', email: 'amelia.teacher@demo.local', role: 'Teacher', instrument: 'Guitar', status: 'Active', lockedUntil: null, failedLogins: 0 },
       { id: 't2', name: 'Marcus Lee', email: 'marcus.teacher@demo.local', role: 'Teacher', instrument: 'Piano', status: 'Active', lockedUntil: null, failedLogins: 0 },
       { id: 't3', name: 'Nadia Rahman', email: 'nadia.teacher@demo.local', role: 'Teacher', instrument: 'Drums', status: 'Active', lockedUntil: null, failedLogins: 0 },
-      { id: 't4', name: 'Daniel Wong', email: 'daniel.teacher@demo.local', role: 'Teacher', instrument: 'Piano', status: 'Active', lockedUntil: null, failedLogins: 0 },
+      { id: 't4', name: 'Daniel Wong', email: 'daniel.teacher@demo.local', role: 'Teacher', instrument: 'Guitar', status: 'Active', lockedUntil: null, failedLogins: 0 },
       { id: 't5', name: 'Sarah Ng', email: 'sarah.teacher@demo.local', role: 'Teacher', instrument: 'Violin', status: 'Active', lockedUntil: null, failedLogins: 0 },
       { id: 't6', name: 'Ethan Koh', email: 'ethan.teacher@demo.local', role: 'Teacher', instrument: 'Piano', status: 'Active', lockedUntil: null, failedLogins: 0 },
       { id: 't7', name: 'Priya Nair', email: 'priya.teacher@demo.local', role: 'Teacher', instrument: 'Violin', status: 'Active', lockedUntil: null, failedLogins: 0 },
